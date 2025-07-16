@@ -1,0 +1,143 @@
+"use client"
+import { useState } from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
+const initialItems = [
+  { id: '1', name: 'Coca Cola', price: '$1.00', volume: '500ml', type: 'Soda', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlRNFa3_svAWyJLpPaLNUo2MYz4Hkpj8uoww&s' },
+  { id: '2', name: 'Pepsi', price: '$1.00', volume: '500ml', type: 'Soda', image: 'https://cdn0.iconfinder.com/data/icons/food-and-drink-43/512/food-09-512.png' },
+  { id: '3', name: 'Orange Juice', price: '$1.50', volume: '300ml', type: 'Juice', image: 'https://icons.veryicon.com/png/o/food--drinks/food-icon-11/orange-juice-4.png' },
+  { id: '4', name: 'Green Tea', price: '$2.00', volume: '400ml', type: 'Tea', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlIgSFHC-mFSrweVhCspJCMCzO4dxQ4h_Y-w&s' },
+  { id: '5', name: 'Water', price: '$0.50', volume: '600ml', type: 'Water', image: 'https://cdn-icons-png.freepik.com/512/2892/2892731.png' },
+];
+
+const Home = () => {
+  const [items, setItems] = useState(initialItems);
+  const [basket, setBasket] = useState([]);
+
+  const onDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    if (result.source.droppableId === 'droppable' && result.destination.droppableId === 'basket') {
+      const item = items.find((item) => item.id === result.draggableId);
+      const newBasket = Array.from(basket);
+      newBasket.splice(result.destination.index, 0, item);
+      setBasket(newBasket);
+      setItems((prevItems) => prevItems.filter((i) => i.id !== item.id));
+    } else if (result.source.droppableId === 'basket' && result.destination.droppableId === 'droppable') {
+      const item = basket.find((item) => item.id === result.draggableId);
+      const newItems = Array.from(items);
+      newItems.splice(result.destination.index, 0, item);
+      setItems(newItems);
+      setBasket((prevBasket) => prevBasket.filter((i) => i.id !== item.id));
+    } else if (result.source.droppableId === 'droppable' && result.destination.droppableId === 'droppable') {
+      const reorderedItems = Array.from(items);
+      const [removed] = reorderedItems.splice(result.source.index, 1);
+      reorderedItems.splice(result.destination.index, 0, removed);
+      setItems(reorderedItems);
+    } else if (result.source.droppableId === 'basket' && result.destination.droppableId === 'basket') {
+      const reorderedBasket = Array.from(basket);
+      const [removed] = reorderedBasket.splice(result.source.index, 1);
+      reorderedBasket.splice(result.destination.index, 0, removed);
+      setBasket(reorderedBasket);
+    }
+  };
+
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Droppable droppableId="droppable">
+          {(provided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={{ padding: 8, width: 300, minHeight: 500, backgroundColor: '#f0f0f0' }}
+            >
+              {items.map((item, index) => (
+                <Draggable key={item.id} draggableId={item.id} index={index}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={{
+                        userSelect: 'none',
+                        padding: 16,
+                        margin: '0 0 8px 0',
+                        minHeight: '150px',
+                        backgroundColor: '#fff',
+                        color: '#333',
+                        border: '1px solid #ccc',
+                        borderRadius: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        ...provided.draggableProps.style,
+                      }}
+                    >
+                      <img src={item.image} alt={item.name} style={{ width: 100, height: 100, marginRight: 16 }} />
+                      <div>
+                        <h4 style={{ fontSize: '18px', color: '#333' }}>{item.name}</h4>
+                        <p style={{ fontSize: '14px', color: '#666' }}>Price: {item.price}</p>
+                        <p style={{ fontSize: '14px', color: '#666' }}>Volume: {item.volume}</p>
+                        <p style={{ fontSize: '14px', color: '#666' }}>Type: {item.type}</p>
+                      </div>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+
+        <Droppable droppableId="basket">
+          {(provided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={{ padding: 8, width: 300, minHeight: 500, backgroundColor: '#e0ffe0' }}
+            >
+              <h3>Shopping Basket</h3>
+              {basket.map((item, index) => (
+                <Draggable key={item.id} draggableId={item.id} index={index}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={{
+                        userSelect: 'none',
+                        padding: 16,
+                        margin: '0 0 8px 0',
+                        minHeight: '150px',
+                        backgroundColor: '#fff',
+                        color: '#333',
+                        border: '1px solid #ccc',
+                        borderRadius: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        ...provided.draggableProps.style,
+                      }}
+                    >
+                      <img src={item.image} alt={item.name} style={{ width: 100, height: 100, marginRight: 16 }} />
+                      <div>
+                        <h4 style={{ fontSize: '18px', color: '#333' }}>{item.name}</h4>
+                        <p style={{ fontSize: '14px', color: '#666' }}>Price: {item.price}</p>
+                        <p style={{ fontSize: '14px', color: '#666' }}>Volume: {item.volume}</p>
+                        <p style={{ fontSize: '14px', color: '#666' }}>Type: {item.type}</p>
+                      </div>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </div>
+    </DragDropContext>
+  );
+};
+
+export default Home;
