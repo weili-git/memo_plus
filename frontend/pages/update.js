@@ -34,11 +34,11 @@ export default function UpdatePage() {
     }
 
     return (
-        <div style={{textAlign: 'center'}}>
-            <h1>Update Page</h1>
-            <p>Word: {router.query.word}</p>
-            <input value={meaning} onChange={(e) => setMeaning(e.target.value)}/>
-            <button onClick={handleUpdate}>Update</button>
+        <div className='text-center w-[800px] mx-auto bg-gray-100 p-4'>
+            <h1 className='text-4xl'>Update Page</h1>
+            <p className='text-xl'>Word: {router.query.word}</p>
+            <input className='w-full p-2 border border-gray-300 rounded-md' value={meaning} onChange={(e) => setMeaning(e.target.value)}/>
+            <button className='bg-green-500 text-white px-4 py-2 rounded-md' onClick={handleUpdate}>Update</button>
         </div>
     )
 }

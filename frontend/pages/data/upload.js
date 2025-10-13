@@ -62,9 +62,9 @@ export default function Upload() {
         }
     }
     return (
-        <div style={{textAlign: 'center'}}>
+        <div className='text-center'>
             <div>
-                <h1>Import Data</h1>
+                <h1 className='text-4xl'>Import Data</h1>
                 <form onSubmit={handleSubmit}>
                     <input type="file" onChange={handleFileChange} />
                     {filePreview && (
@@ -74,8 +74,8 @@ export default function Upload() {
                         </div>
                     )}
                     <div>
-                        <button type='submit'>Enter</button>
-                        <button type='reset' onClick={handleClear}>Clear</button>
+                        <button className='bg-green-500 text-white px-4 py-2 rounded-md' type='submit'>Enter</button>
+                        <button className='bg-red-500 text-white px-4 py-2 rounded-md' type='reset' onClick={handleClear}>Clear</button>
                     </div>
                 </form>
             </div>

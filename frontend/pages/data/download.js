@@ -22,10 +22,10 @@ export default function Download() {
     }
 
     return (
-        <div style={{textAlign: "center"}}>
+        <div className="text-center">
             <div>
-                <h1>Export Data</h1>
-                <button onClick={handleExport}>download</button>
+                <h1 className="text-4xl">Export Data</h1>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={handleExport}>download</button>
             </div>
 
         </div>

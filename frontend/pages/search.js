@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import Cardlist from '../components/CardList';
+import Cardlist from '../components/Cardlist';
 
 export default function Search() {
     const router = useRouter();
@@ -27,7 +27,7 @@ export default function Search() {
 
     return (
         <div>
-            <h1>搜索结果</h1>
+            <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">搜索结果 - {searchResults.length} 条</h1>
             {searchResults.length === 0 ? (
                 <div>
                     <p>No results found.</p>

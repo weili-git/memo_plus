@@ -44,11 +44,12 @@ export default function createBatch() {
     }
 
     return (
-        <div style={{ textAlign: "center" }}>
-            <h1>Create Batch</h1>
+        <div className='text-center w-[800px] mx-auto bg-gray-100 p-4'>
+            <h1 className='text-4xl'>Create Batch</h1>
             <form onSubmit={handleSubmit}>
-                <div>
+                <div className='mt-4'>
                     <textarea
+                        className='w-full p-2 border border-gray-300 rounded-md'
                         value={text}
                         rows={10}
                         cols={100}
@@ -62,7 +63,7 @@ meaning 2
 ...`}
                     />
                 </div>
-                <button type='submit'>Enter</button>
+                <button className='bg-green-500 text-white px-4 py-2 rounded-md' type='submit'>Enter</button>
             </form>
         </div>
     )

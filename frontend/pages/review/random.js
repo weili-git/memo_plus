@@ -97,17 +97,17 @@ export default function RandomDisplay() {
     }
 
     return (
-        <div style={{textAlign: "center"}}>
-            <h1>Random Display</h1>
-            <button onClick={handleReview}>Review</button>
-            <button onClick={switchMeaningDisplay}>Switch</button>
-            <button onClick={nextBatch}>Next</button>
+        <div className="text-center">
+            <h1 className="text-4xl">Random Display</h1>
+            <button className="bg-green-500 text-white px-4 py-2 rounded-md" onClick={handleReview}>Review</button>
+            <button className="bg-yellow-500 text-white px-4 py-2 rounded-md" onClick={switchMeaningDisplay}>Switch</button>
+            <button className="bg-red-500 text-white px-4 py-2 rounded-md" onClick={nextBatch}>Next</button>
             <DragDropContext onDragEnd={handleDragEnd}>
                 <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                     <Droppable droppableId="source">
                         {(provided) => (
                             <div {...provided.droppableProps} ref={provided.innerRef} style={{ background: '#f0f0f0', width: 300 }}>
-                                <h3 style={{ margin: "5px 10px" }}>To Review</h3>
+                                <h3 className="text-2xl" style={{ margin: "5px 10px" }}>To Review</h3>
                                 {source.map((item, index) => (
                                     <Draggable key={item.word} draggableId={item.word} index={index}>
                                         {(provided) => (
@@ -138,7 +138,7 @@ export default function RandomDisplay() {
                     <Droppable droppableId="target">
                         {(provided) => (
                             <div {...provided.droppableProps} ref={provided.innerRef} style={{ background: '#f0f0f0', width: 300 }}>
-                                <h3 style={{ margin: "5px 10px" }}>Reviewed</h3>
+                                <h3 className="text-2xl" style={{ margin: "5px 10px" }}>Reviewed</h3>
                                 {target.map((item, index) => (
                                     <Draggable key={item.word} draggableId={item.word} index={index}>
                                         {(provided) => (

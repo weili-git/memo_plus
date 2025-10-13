@@ -44,17 +44,17 @@ export default function CreateWord() {
         setMeaning('');
     }
     return (
-        <div style={{textAlign: "center"}}>
-            <h1>Create A Word</h1>
+        <div className='text-center w-[800px] mx-auto bg-gray-100 p-4'>
+            <h1 className='text-4xl'>Create A Word</h1>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <input value={word} onChange={(e) => setWord(e.target.value)} placeholder='Word' />
+                <div className='mt-4'>
+                    <input className='w-full p-2 border border-gray-300 rounded-md' value={word} onChange={(e) => setWord(e.target.value)} placeholder='Word' />
                 </div>
                 <div>
-                    <input value={meaning} onChange={(e) => setMeaning(e.target.value)} placeholder='Meaning' />
+                    <input className='w-full p-2 border border-gray-300 rounded-md' value={meaning} onChange={(e) => setMeaning(e.target.value)} placeholder='Meaning' />
                 </div>
-                <button type='submit'>Enter</button>
-                <button type='reset' onClick={handleClear}>clear</button>
+                <button className='bg-green-500 text-white px-4 py-2 rounded-md' type='submit'>Enter</button>
+                <button className='bg-red-500 text-white px-4 py-2 rounded-md' type='reset' onClick={handleClear}>clear</button>
             </form>
         </div>
     );

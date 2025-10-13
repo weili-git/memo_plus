@@ -39,13 +39,13 @@ export default function Index() {
   }
 
   return (
-    <div style={{textAlign: "center"}}>
-      <h1>Home Page</h1>
-      <h4>Total words:</h4>
-      <p>{createTime.length}</p>
-      <h4>Create Trend</h4>
+    <div className='text-center items-center justify-center w-[800px] mx-auto bg-gray-100 p-4'>
+      <h1 className='text-4xl'>Home Page</h1>
+      <h4 className='text-xl'>Total words:</h4>
+      <p className='text-base'>{createTime.length}</p>
+      <h4 className='text-xl'>Create Trend</h4>
       <Histogram data={createTime} onClick={queryByCreateTime}></Histogram>
-      <h4>Review Trend</h4>
+      <h4 className='text-xl'>Review Trend</h4>
       <Histogram data={lastReview} color="#b36b6b"></Histogram>
     </div>
   );

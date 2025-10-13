@@ -26,8 +26,8 @@ export default function QueryByDate() {
     }, [date]);
 
     return (
-        <div style={{textAlign: "center"}}>
-            <h1>{date}</h1>
+        <div className="text-center">
+            <h1 className="text-2xl font-bold m-4">{date}</h1>
             {records.length === 0 && <p>No records found for this date.</p>}
             <Cardlist data={records} />
         </div>
