@@ -39,7 +39,7 @@ export default function Index() {
   }
 
   return (
-    <div className='text-center items-center justify-center w-[800px] mx-auto bg-gray-100 p-4'>
+    <div className='text-center items-center justify-center w-[1000px] mx-auto bg-gray-100 p-4'>
       <h1 className='text-4xl'>Home Page</h1>
       <h4 className='text-xl'>Total words:</h4>
       <p className='text-base'>{createTime.length}</p>

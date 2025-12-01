@@ -26,7 +26,7 @@ const Navbar = () => {
                     <Link href="/" style={{color: 'white', textDecoration: 'none' }}>Home</Link>
                 </li>
                 <li className={router.pathname.startsWith("/data") ? "active" : ""}>
-                    <Dropdown title="Data Manage">
+                    <Dropdown title="Data">
                         <Link href="/data/upload">upload</Link>
                         <Link href="/data/download">download</Link>
                     </Dropdown>
@@ -35,6 +35,7 @@ const Navbar = () => {
                     <Dropdown title="Review">
                         <Link href="/review/random">random</Link>
                         <Link href="/review/oldest">oldest</Link>
+                        <Link href="review/test">test</Link>
                     </Dropdown>
                 </li>
                 <li className={router.pathname === "/create" ? "active" : ""}>
