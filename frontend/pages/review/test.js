@@ -142,6 +142,39 @@ export default function ReviewTest() {
     return () => clearTimeout(hintTimer.current);
   }, [words, meanings, matchedIds]);
 
+  /* ---------- 计算雷达图数据 ---------- */
+  const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+  const scale = (v, min, max) => (v - min) / (max - min);
+
+  const speedLevel = avgTime =>
+    avgTime < 1.2 ? 5 :
+      avgTime < 3 ? 4 :
+        avgTime < 7 ? 3 :
+          avgTime < 12 ? 2 : 1;
+
+  const accuracyLevel = acc =>
+    acc >= 0.95 ? 5 :
+      acc >= 0.85 ? 4 :
+        acc >= 0.70 ? 3 :
+          acc >= 0.50 ? 2 : 1;
+
+  const difficultyLevel = reviewCount =>
+    reviewCount < 1 ? 5 :
+      reviewCount < 3 ? 4 :
+        reviewCount < 6 ? 3 :
+          reviewCount < 9 ? 2 : 1;
+
+  const stabilityLevel = std =>
+    std < 1.0 ? 5 :
+      std < 2.0 ? 4 :
+        std < 4.0 ? 3 :
+          std < 7.0 ? 2 : 1;
+
+  const avgTime = timeRecords.reduce((acc, cur) => acc + cur, 0) / timeRecords.length;
+  const accuracy = answers.filter(a => a.correct).length / answers.length;
+  const avgReview = basePairs.reduce((acc, cur) => acc + cur.reviewCount, 0) / basePairs.length;
+  const variance = timeRecords.reduce((acc, cur) => acc + clamp((cur - avgTime) ** 2, 0, 20), 0) / timeRecords.length;
+
   function calcRadarData() {
     if (answers.length === 0) {
       return [
@@ -154,31 +187,20 @@ export default function ReviewTest() {
       ];
     }
 
-    const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
-    const scale = (v, min, max) => (v - min) / (max - min);
-
-    const speed = timeRecords.reduce((acc, cur) => acc + 1 / clamp(cur, 0.5, 20), 0) / timeRecords.length;
-    const accuracy = answers.filter(a => a.correct).length / answers.length;
-    const difficulty = basePairs.reduce((acc, cur) => acc + 1 / clamp(cur.reviewCount + 1, 1, 10), 0) / basePairs.length;
-    const stability = timeRecords.reduce((acc, cur) => acc + clamp((cur - speed) ** 2, 0, 20), 0) / timeRecords.length;
-    // todo
-    // const memory = progress / basePairs.length;
-    // const persistence = score / basePairs.length;
-
     console.log([
-      { metric: "速度", value: scale(speed, 0.5, 20) },
-      { metric: "准确度", value: accuracy },
-      { metric: "难度", value: scale(difficulty, 0.1, 1) },
-      { metric: "稳定性", value: scale(stability, 0, 20) },
+      { metric: "速度", value: speedLevel(avgTime) },
+      { metric: "准确度", value: accuracyLevel(accuracy) },
+      { metric: "难度", value: difficultyLevel(avgReview) },
+      { metric: "稳定性", value: stabilityLevel(variance) },
       // { metric: "记忆力", value: memory },
       // { metric: "坚持度", value: persistence },
     ]);
 
     return [
-      { metric: "速度", value: speed * 100 },
-      { metric: "准确度", value: accuracy * 100 },
-      { metric: "难度", value: difficulty * 100 },
-      { metric: "稳定性", value: stability * 100 },
+      { metric: "速度", value: speedLevel(avgTime) },
+      { metric: "准确度", value: accuracyLevel(accuracy) },
+      { metric: "难度", value: difficultyLevel(avgReview) },
+      { metric: "稳定性", value: stabilityLevel(variance) },
       // { metric: "记忆力", value: memory },
       // { metric: "坚持度", value: persistence },
     ];
@@ -189,66 +211,75 @@ export default function ReviewTest() {
 
   return (
     <div className="text-center p-8">
-      <h1 className="text-3xl font-bold mb-10">Review Test</h1>
-      <div className="mb-6">
-        <span className="mr-4 font-semibold">Score: {score}</span>
-        <span className="font-semibold">Progress: {progress}/{basePairs.length}</span>
-      </div>
 
-      <div className="flex justify-center gap-20">
 
-        {/* Words */}
+      {!isFinished &&
         <div>
-          <h2 className="text-xl mb-4 font-semibold">Words</h2>
-          <div className="flex flex-col items-center gap-4">
-            {words.map(w => (
-              <div
-                key={w.id}
-                id={`word-${w.id}`}
-                draggable
-                onDragStart={(e) => onDragStart(e, w.id)}
-                className="px-6 py-3 rounded-xl shadow cursor-grab text-lg font-medium
-                           transition-transform active:scale-95"
-                style={{ background: w.color }}
-              >
-                {w.word}
-              </div>
-            ))}
+          {/* 测试标题 */}
+          <h1 className="text-3xl font-bold mb-10">Review Test</h1>
+          <div className="mb-6">
+            <span className="mr-4 font-semibold">Score: {score}</span>
+            <span className="font-semibold">Progress: {progress}/{basePairs.length}</span>
           </div>
-        </div>
+          <div className="flex justify-center gap-20">
 
-        {/* Meanings */}
-        <div>
-          <h2 className="text-xl mb-4 font-semibold">Meanings</h2>
-          <div className="flex flex-col items-center gap-4">
-            {meanings.map(m => (
-              <div
-                key={m.id}
-                id={`meaning-${m.id}`}
-                onDragOver={onDragOver}
-                onDrop={(e) => onDrop(e, m)}
-                className={`
+            {/* Words */}
+            <div>
+              <h2 className="text-xl mb-4 font-semibold">Words</h2>
+              <div className="flex flex-col items-center gap-4">
+                {words.map(w => (
+                  <div
+                    key={w.id}
+                    id={`word-${w.id}`}
+                    draggable
+                    onDragStart={(e) => onDragStart(e, w.id)}
+                    className="px-6 py-3 rounded-xl shadow cursor-grab text-lg font-medium
+                           transition-transform active:scale-95"
+                    style={{ background: w.color }}
+                  >
+                    {w.word}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Meanings */}
+            <div>
+              <h2 className="text-xl mb-4 font-semibold">Meanings</h2>
+              <div className="flex flex-col items-center gap-4">
+                {meanings.map(m => (
+                  <div
+                    key={m.id}
+                    id={`meaning-${m.id}`}
+                    onDragOver={onDragOver}
+                    onDrop={(e) => onDrop(e, m)}
+                    className={`
                   px-6 py-3 rounded-xl shadow text-lg font-medium border-2 border-dashed
                   transition-all
                   ${matchedIds.includes(m.id)
-                    ? "animate-[match_0.5s_ease-out] border-green-500 bg-green-300"
-                    : "border-gray-400"
-                  }
+                        ? "animate-[match_0.5s_ease-out] border-green-500 bg-green-300"
+                        : "border-gray-400"
+                      }
                 `}
-                style={!matchedIds.includes(m.id) ? { background: m.color } : {}}
-              >
-                {m.meaning}
+                    style={!matchedIds.includes(m.id) ? { background: m.color } : {}}
+                  >
+                    {m.meaning}
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </div>
-      </div>
+      }
 
       {isFinished && (
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-4">Result Summary</h2>
           <p className="mb-2">Total Score: {score}</p>
           <p className="mb-2">Accuracy: {Math.round((answers.filter(a => a.correct).length / answers.length) * 100)}%</p>
+          <p className="mb-2">Average Time: {avgTime.toFixed(2)}s</p>
+          <p className="mb-2">Difficulty: {difficultyLevel(avgReview)}</p>
+          <p className="mb-2">Variance: {variance.toFixed(2)}</p>
           <p className="mb-2">Total Questions: {answers.length}</p>
           <RadarResult data={calcRadarData()}></RadarResult>
         </div>

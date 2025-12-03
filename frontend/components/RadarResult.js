@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  RadarChart, PolarGrid, PolarAngleAxis, Radar, Legend
+  RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend
 } from "recharts";
 
 const RadarResult = ({ data }) => {
@@ -16,6 +16,7 @@ const RadarResult = ({ data }) => {
       >
         <PolarGrid />
         <PolarAngleAxis dataKey="metric" />
+        <PolarRadiusAxis domain={[1, 5]} tick={false}/>
         <Radar
           name="Score"
           dataKey="value"
